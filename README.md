@@ -154,6 +154,18 @@ To reproduce training, provide your own CSV with the same columns:
 python scripts/train_model_clean.py --data path/to/your_dataset.csv --out models/phishing_model.pkl
 ```
 
+## My Contribution
+
+I designed and implemented the phishing URL detection application, including:
+
+- Flask web application and URL checking interface.
+- URL feature extraction.
+- Random Forest machine learning pipeline.
+- Rule-based fallback detection.
+- Model training workflow.
+- Unit tests for the application and feature extraction.
+- Project structure, dependency management, and documentation.
+
 ## Limitations
 
 - Feature extraction uses simple URL string characteristics.
