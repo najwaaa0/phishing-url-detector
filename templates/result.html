@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Result — Phishing URL Detector</title>
+  <style>
+    :root{
+      --bg:#f3f6fb; --card:#ffffff; --muted:#475569; --accent:#0ea5a4;
+      --safe:#059669; --phish:#dc2626; --radius:12px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#eef2ff 0%, #f3f6fb 100%);color:#0b1220;padding:36px;display:flex;align-items:center;justify-content:center;min-height:100vh}
+    .wrap{width:100%;max-width:900px}
+    .card{background:var(--card);padding:28px;border-radius:var(--radius);box-shadow:0 16px 48px rgba(12,17,29,0.08);border:1px solid rgba(10,20,40,0.03)}
+    .meta{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .url{background:#fbfdff;padding:12px;border-radius:10px;border:1px solid #eef2f6;color:#0b1220;word-break:break-all;max-width:100%}
+    .result{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;font-weight:700}
+    .safe{background:rgba(5,150,105,0.08);color:var(--safe);border:1px solid rgba(5,150,105,0.12)}
+    .phish{background:rgba(220,38,38,0.06);color:var(--phish);border:1px solid rgba(220,38,38,0.12)}
+    .actions{margin-top:18px;display:flex;gap:10px;align-items:center}
+    a.button{background:#0b1220;color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
+    button.ghost{background:transparent;border:1px solid #e6eef6;padding:10px 12px;border-radius:10px;cursor:pointer}
+    .note{color:var(--muted);margin-top:14px}
+    .explain{margin-top:16px;padding:12px;border-radius:10px;background:linear-gradient(180deg,#ffffff,#fbfdff);border:1px solid #eef6fb}
+    .badge{font-size:0.85rem;padding:6px 8px;border-radius:999px;background:#f1f5f9;color:#334155;border:1px solid rgba(31,41,55,0.04)}
+    @media (max-width:640px){body{padding:20px}.card{padding:16px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-labelledby="resultTitle">
+      <div class="meta">
+        <div>
+          <h2 id="resultTitle" style="margin:0 0 6px">URL Analysis</h2>
+          <div style="color:var(--muted)">Quick verdict for the submitted URL</div>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="badge">ML model: {{ 'Loaded' if model is defined and model else 'Fallback rules' }}</span>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <div class="url" aria-label="Checked URL">{{ url }}</div>
+
+        {% if result == 'Safe' %}
+          <div class="result safe" role="status">✅ Safe</div>
+        {% else %}
+          <div class="result phish" role="status">⚠️ Phishing / Not Safe</div>
+        {% endif %}
+      </div>
+
+      <div class="actions">
+        <a class="button" href="/">← Check another</a>
+
+        <form action="/check_url" method="post" style="margin:0">
+          <input type="hidden" name="url" value="{{ url }}" />
+          <button class="ghost" type="submit">Re-check same</button>
+        </form>
+
+        <button class="ghost" id="copyBtn" type="button">Copy URL</button>
+      </div>
+
+      <div class="note">This assessment is based on simple heuristics (IP in host, suspicious keywords, subdomain count, etc.) and a model when available. Use caution and manual verification for high-risk actions.</div>
+
+      <div class="explain" aria-hidden="true" id="explain">
+        <strong>Why this result?</strong>
+        <ul style="margin:8px 0 0 16px;color:var(--muted)">
+          <li>Presence of suspicious keywords (e.g., "login", "secure")</li>
+          <li>IP address in hostname, too many subdomains, or very long URL increase risk</li>
+          <li>Machine learning model (if loaded) provides additional signal</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const copyBtn = document.getElementById('copyBtn');
+    copyBtn.addEventListener('click', async ()=>{
+      const txt = "{{ url }}";
+      try{
+        await navigator.clipboard.writeText(txt);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(()=>copyBtn.textContent='Copy URL', 1500);
+      }catch(e){
+        alert('Could not copy URL');
+      }
+    });
+  </script>
+</body>
+</html>

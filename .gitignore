@@ -1,0 +1,54 @@
+# Python bytecode and caches
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Build and packaging outputs
+*.egg-info/
+build/
+dist/
+*.egg
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# OS and editor files
+.DS_Store
+__MACOSX/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Generated runtime and temporary files
+predictions.log
+*.log
+*.tmp
+*.bak
+tmp/
+temp/
+
+# Generated model and report artifacts
+models/phishing_model.pkl
+models/*.joblib
+reports/
+*.npy
+
+# Local/raw dataset material
+clean_dataset.csv
